@@ -1,0 +1,8 @@
+*.DS_Store
+*.dat
+*.a
+*.o
+pcg64_example
+pcg64_example_emulate
+reference_implementation
+/.vscode

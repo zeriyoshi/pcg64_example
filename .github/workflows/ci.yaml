@@ -1,0 +1,39 @@
+on: [push, pull_request]
+
+jobs:
+  amd64:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'CI skip') == false
+    name: Testing amd64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+          submodules: true
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true  
+      - name: Build container
+        run: |
+          make build ARCH=amd64
+      - name: Test
+        run: |
+          make docker-test ARCH=amd64
+  i386:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'CI skip') == false
+    name: Testing i386
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+          submodules: true
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true  
+      - name: Build container
+        run: |
+          make build ARCH=i386
+      - name: Test
+        run: |
+          make docker-test32 ARCH=i386

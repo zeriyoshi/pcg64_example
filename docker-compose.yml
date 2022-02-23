@@ -1,0 +1,38 @@
+version: "3.8"
+
+x-service_base: &x-service_base
+  volumes:
+    - "./:/work:delegated"
+  tty: true
+  privileged: true
+  cap_add:
+    - "SYS_PTRACE"
+  security_opt:
+    - "seccomp:unconfined"
+
+services:
+  amd64:
+    <<: *x-service_base
+    build:
+      context: "."
+      dockerfile: "Dockerfile_amd64"
+  arm32v7:
+    <<: *x-service_base
+    build:
+      context: "."
+      dockerfile: "Dockerfile_arm32v7"
+  arm64v8:
+    <<: *x-service_base
+    build:
+      context: "."
+      dockerfile: "Dockerfile_arm64v8"
+  i386:
+    <<: *x-service_base
+    build:
+      context: "."
+      dockerfile: "Dockerfile_i386"
+  s390x:
+    <<: *x-service_base
+    build:
+      context: "."
+      dockerfile: "Dockerfile_s390x"
