@@ -1,5 +1,5 @@
 # Program
-CC		= cc
+CC	= cc
 CFLAGS	= -std=c99 -Wall -Wextra -I/usr/local/include -I./pcg-c/include
 LDFLAGS	= -L/usr/local/lib -L./pcg-c/src
 LDLIBS  = -L./pcg-c/src -lpcg_random

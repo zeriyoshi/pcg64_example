@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
 	}
 	printf("done\n");
 
-    fclose(fp);
+	fclose(fp);
 
 	printf("%s\n", "finished");
 	return 0;
