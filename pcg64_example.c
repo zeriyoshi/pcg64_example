@@ -40,7 +40,7 @@ typedef struct _random_uint128_t {
 	} while (0);
 # define PCG64_ROTR64(x, result)	\
 	do { \
-		const uint64_t _v = (x.hi ^ x.lo), _s = x.hi >> 58u; \
+		const uint64_t _v = (x.hi ^ x.lo), _s = x.hi >> 58U; \
 		result = (_v >> _s) | (_v << ((-_s) & 63)); \
 	} while (0);
 
@@ -52,7 +52,7 @@ typedef __uint128_t random_uint128_t;
 # define PCG64_ROTL1OR1(x, result)	result = (x << 1U) | 1U;
 # define PCG64_ROTR64(x, result)	\
 	do { \
-		uint64_t _v = ((uint64_t) (x >> 64u)) ^ (uint64_t) x, _s = x >> 122u; \
+		uint64_t _v = ((uint64_t) (x >> 64U)) ^ (uint64_t) x, _s = x >> 122U; \
 		result = (_v >> _s) | (_v << ((-_s) & 63)); \
 	} while (0);
 #endif
