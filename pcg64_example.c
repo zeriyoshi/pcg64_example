@@ -113,7 +113,6 @@ int main(int argc, char **argv) {
 
 #ifdef FORCE_EMULATE_128
 	printf("%s\n", "NOTICE: Emulated __uint128_t");
-#else
 #endif
 
 	printf("parameters:\n\tseed: %" PRIu64 "\n\titerations: %i\n\toutput_file: %s\n", seed, iterations, argv[3]);
