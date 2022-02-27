@@ -63,11 +63,38 @@ typedef struct _php_random_engine_state_pcg64 {
 } php_random_engine_state_pcg64;
 
 static inline void pcg64_step(php_random_engine_state_pcg64 *s) {
-	random_uint128_t c;
-	UINT128_CON(2549297995355413924ULL, 4865540595714422341ULL, c);
+	random_uint128_t con;
+	UINT128_CON(2549297995355413924ULL, 4865540595714422341ULL, con);
 
-	UINT128_MUL(s->s, c, s->s);
+	UINT128_MUL(s->s, con, s->s);
 	UINT128_ADD(s->s, s->inc, s->s);
+}
+
+static inline void pcg64_advance(php_random_engine_state_pcg64 *s, uint64_t advance) {
+	random_uint128_t con, acc_mul, acc_add, cur_mul, cur_add, t;
+	UINT128_CON(2549297995355413924ULL, 4865540595714422341ULL, con);
+	UINT128_CON(0ULL, 1ULL, acc_mul);
+	UINT128_CON(0ULL, 0ULL, acc_add);
+	cur_mul = con;
+	cur_add = s->inc;
+
+	while (advance > 0) {
+		if (advance & 1) {
+			UINT128_MUL(acc_mul, cur_mul, acc_mul);
+			
+			UINT128_MUL(acc_add, cur_mul, acc_add);
+			UINT128_ADD(acc_add, cur_add, acc_add);
+		}
+		UINT128_CON(0ULL, 1ULL, t);
+		UINT128_ADD(cur_mul, t, t);
+		UINT128_MUL(t, cur_add, cur_add);
+
+		UINT128_MUL(cur_mul, cur_mul, cur_mul);
+		advance /= 2;
+	}
+
+	UINT128_MUL(acc_mul, s->s, s->s);
+	UINT128_ADD(s->s, acc_add, s->s);
 }
 
 static uint64_t pcg64_generate(void *state) {
@@ -98,7 +125,7 @@ int main(int argc, char **argv) {
 	}
 
 	php_random_engine_state_pcg64 *s = calloc(1, sizeof(php_random_engine_state_pcg64));
-	uint64_t seed;
+	uint64_t seed, advance = UINT64_MAX;
 	int iterations, i;
 	FILE *fp;
 
@@ -127,6 +154,10 @@ int main(int argc, char **argv) {
 	for (i = 0; i < iterations; i++) {
 		fprintf(fp, "%i: %" PRIu64 "\n", i + 1, pcg64_generate(s));
 	}
+
+	pcg64_advance(s, advance);
+	fprintf(fp, "advance %llu: %" PRIu64 "\n", advance, pcg64_generate(s));
+
 	printf("done\n");
 
 	fclose(fp);

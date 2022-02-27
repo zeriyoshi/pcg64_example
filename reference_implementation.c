@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
     } 
 
     pcg64_random_t r;
-    __uint128_t seed, inc = 0;
+    __uint128_t seed, inc = 0, advance = UINT64_MAX;
     int iterations, i;
     FILE *fp;
 
@@ -37,6 +37,10 @@ int main(int argc, char **argv) {
 	for (i = 0; i < iterations; i++) {
 		fprintf(fp, "%i: %" PRIu64 "\n", i + 1, pcg64_random_r(&r));
 	}
+
+    pcg64_advance_r(&r, advance);
+    fprintf(fp, "advance %llu: %" PRIu64 "\n", (uint64_t) advance, pcg64_random_r(&r));
+
 	printf("done\n");
 
 	fclose(fp);
