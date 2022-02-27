@@ -25,12 +25,12 @@ all: all32
 	$(CC) $(CFLAGS) -DFORCE_EMULATE_128 $(LDFLAGS) pcg64_example.c $(LDLIBS) -o pcg64_example_emulate
 	$(CC) $(CFLAGS) $(LDFLAGS) reference_implementation.c $(LDLIBS) -o reference_implementation
 
-test32: clean all32
+test32: all32
 	./pcg64_example 4294967296 114514 pcg64_example_32.dat
 	if ! cmp "static_reference_implementation_seed_4294967296_iter_114514.refdat" "pcg64_example_32.dat"; then echo "FAILED (pcg64emu <-> static reference)"; exit 1; fi
 	echo "SUCCESS"
 
-test: clean all
+test: all
 	./pcg64_example ${SEED} ${ITER} pcg64_example.dat
 	./pcg64_example_emulate ${SEED} ${ITER} pcg64_example_emulate.dat
 	./reference_implementation ${SEED} ${ITER} reference_implementation.dat

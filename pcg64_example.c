@@ -108,6 +108,7 @@ int main(int argc, char **argv) {
 	
 	if (fp == NULL) {
 		printf("fopen failed: %s\n", argv[3]);
+		free(s);
 		return 2;
 	}
 
