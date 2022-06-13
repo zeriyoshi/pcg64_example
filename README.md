@@ -1,4 +1,4 @@
-# PCG64 (pcg_state_setseq_128 XSL-RR-RR) C implementation for 32 / 64-bit platforms
+# PCG64 (pcg_state_oneseq_128 XSL-RR) C implementation for 32 / 64-bit platforms
 
 ## What's this?
 
@@ -14,7 +14,6 @@ It aims to be an implementation of Rust's `Pcg64` and NumPy's `PCG64`.
 
 - Not possible to seed with 128-bit values
     - Because it is a PoC. PHP implementation allows 128-bit seeding with string.
-- Starting sequence cannot be specified
 - Cannot fully testing on `__uint128_t` unsupported environment
 
 ## Clone
