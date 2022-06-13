@@ -12,8 +12,8 @@ int main(int argc, char **argv) {
 		return 1;
     } 
 
-    pcg64_random_t r;
-    __uint128_t seed, inc = 0, advance = UINT64_MAX;
+    pcg64s_random_t r;
+    __uint128_t seed, advance = UINT64_MAX;
     int iterations, i;
     FILE *fp;
 
@@ -29,17 +29,17 @@ int main(int argc, char **argv) {
     printf("parameters:\n\tseed: %" PRIu64 "\n\titerations: %i\n\toutput_file: %s\n", (uint64_t) seed, iterations, argv[3]);
 
     printf("seeding...");
-	pcg64_srandom_r(&r, seed, inc);
+    pcg64s_srandom_r(&r, seed);
 	printf("OK\n");
 
 	printf("generating...");
 	fprintf(fp, "seed: %" PRIu64 "\n", (uint64_t) seed);
 	for (i = 0; i < iterations; i++) {
-		fprintf(fp, "%i: %" PRIu64 "\n", i + 1, pcg64_random_r(&r));
+		fprintf(fp, "%i: %" PRIu64 "\n", i + 1, pcg64s_random_r(&r));
 	}
 
-    pcg64_advance_r(&r, advance);
-    fprintf(fp, "advance %llu: %" PRIu64 "\n", (uint64_t) advance, pcg64_random_r(&r));
+    pcg64s_advance_r(&r, advance);
+    fprintf(fp, "advance %llu: %" PRIu64 "\n", (uint64_t) advance, pcg64s_random_r(&r));
 
 	printf("done\n");
 
