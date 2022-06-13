@@ -160,7 +160,7 @@ int main(int argc, char **argv) {
 		return 2;
 	}
 
-#ifdef FORCE_EMULATE_128
+#ifdef PHP_RANDOM_FORCE_EMULATE_128
 	printf("%s\n", "NOTICE: Emulated __uint128_t");
 #endif
 

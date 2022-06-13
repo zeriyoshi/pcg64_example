@@ -22,7 +22,7 @@ all32: clean
 	$(CC) $(CFLAGS) $(LDFLAGS) pcg64_example.c $(LDLIBS) -o pcg64_example
 
 all: all32
-	$(CC) $(CFLAGS) -DFORCE_EMULATE_128 $(LDFLAGS) pcg64_example.c $(LDLIBS) -o pcg64_example_emulate
+	$(CC) $(CFLAGS) -DPHP_RANDOM_FORCE_EMULATE_128 $(LDFLAGS) pcg64_example.c $(LDLIBS) -o pcg64_example_emulate
 	$(CC) $(CFLAGS) $(LDFLAGS) reference_implementation.c $(LDLIBS) -o reference_implementation
 
 test32: all32
