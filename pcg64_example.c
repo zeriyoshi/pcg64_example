@@ -6,84 +6,84 @@
 
 #if !defined(__SIZEOF_INT128__) || defined(PHP_RANDOM_FORCE_EMULATE_128)
 typedef struct _random_uint128_t {
-    uint64_t hi;
-    uint64_t lo;
+	uint64_t hi;
+	uint64_t lo;
 } random_uint128_t;
 
 static inline random_uint128_t php_random_uint128_constant(uint64_t hi, uint64_t lo)
 {
-    random_uint128_t r;
-    
-    r.hi = hi;
-    r.lo = lo;
+	random_uint128_t r;
+	
+	r.hi = hi;
+	r.lo = lo;
 
-    return r;
+	return r;
 }
 
 static inline random_uint128_t php_random_uint128_add(random_uint128_t num1, random_uint128_t num2)
 {
-    random_uint128_t r;
-    
-    r.lo = (num1.lo + num2.lo);
-    r.hi = (num1.hi + num2.hi + (r.lo < num1.lo));
+	random_uint128_t r;
+	
+	r.lo = (num1.lo + num2.lo);
+	r.hi = (num1.hi + num2.hi + (r.lo < num1.lo));
 
-    return r;
+	return r;
 }
 
 static inline random_uint128_t php_random_uint128_multiply(random_uint128_t num1, random_uint128_t num2)
 {
-    random_uint128_t r;
-    const uint64_t
-        x0 = num1.lo & 0xffffffffULL,
-        x1 = num1.lo >> 32,
-        y0 = num2.lo & 0xffffffffULL,
-        y1 = num2.lo >> 32,
-        z0 = (((x1 * y0) + (x0 * y0 >> 32)) & 0xffffffffULL) + x0 * y1;
-    
-    r.hi = num1.hi * num2.lo + num1.lo * num2.hi;
-    r.lo = num1.lo * num2.lo;
-    r.hi += x1 * y1 + ((x1 * y0 + (x0 * y0 >> 32)) >> 32) + (z0 >> 32);
+	random_uint128_t r;
+	const uint64_t
+		x0 = num1.lo & 0xffffffffULL,
+		x1 = num1.lo >> 32,
+		y0 = num2.lo & 0xffffffffULL,
+		y1 = num2.lo >> 32,
+		z0 = (((x1 * y0) + (x0 * y0 >> 32)) & 0xffffffffULL) + x0 * y1;
+	
+	r.hi = num1.hi * num2.lo + num1.lo * num2.hi;
+	r.lo = num1.lo * num2.lo;
+	r.hi += x1 * y1 + ((x1 * y0 + (x0 * y0 >> 32)) >> 32) + (z0 >> 32);
 
-    return r;
+	return r;
 }
 
 static inline uint64_t php_random_pcg64s_rotr64(random_uint128_t num)
 {
-    const uint64_t
-        v = (num.hi ^ num.lo),
-        s = num.hi >> 58U;
+	const uint64_t
+		v = (num.hi ^ num.lo),
+		s = num.hi >> 58U;
 
-    return (v >> s) | (v << ((-s) & 63));
+	return (v >> s) | (v << ((-s) & 63));
 }
 #else
 typedef __uint128_t random_uint128_t;
 
 static inline random_uint128_t php_random_uint128_constant(uint64_t hi, uint64_t lo)
 {
-    random_uint128_t r;
+	random_uint128_t r;
 
-    r = ((random_uint128_t) hi << 64) + lo;
+	r = ((random_uint128_t) hi << 64) + lo;
 
-    return r;
+	return r;
 }
 
 static inline random_uint128_t php_random_uint128_add(random_uint128_t num1, random_uint128_t num2)
 {
-    return num1 + num2;
+	return num1 + num2;
 }
 
 static inline random_uint128_t php_random_uint128_multiply(random_uint128_t num1, random_uint128_t num2)
 {
-    return num1 * num2;
+	return num1 * num2;
 }
 
 static inline uint64_t php_random_pcg64s_rotr64(random_uint128_t num)
 {
-    const uint64_t 
-        v = ((uint64_t) (num >> 64U)) ^ (uint64_t) num,
-        s = num >> 122U;
-    
-    return (v >> s) | (v << ((-s) & 63));
+	const uint64_t 
+		v = ((uint64_t) (num >> 64U)) ^ (uint64_t) num,
+		s = num >> 122U;
+	
+	return (v >> s) | (v << ((-s) & 63));
 }
 #endif
 
