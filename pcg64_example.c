@@ -133,7 +133,7 @@ static uint64_t pcg64s_generate(void *state) {
 static void pcg64s_seed(void *state, const random_uint128_t seed) {
 	php_random_engine_state_pcg64 *s = (php_random_engine_state_pcg64 *) state;
 	
-	s->s = 0U;
+	s->s = php_random_uint128_constant(0ULL, 0ULL);
 	pcg64s_step(s);
 	s->s = php_random_uint128_add(s->s, seed);
 	pcg64s_step(s);
@@ -167,7 +167,7 @@ int main(int argc, char **argv) {
 	printf("parameters:\n\tseed: %" PRIu64 "\n\titerations: %i\n\toutput_file: %s\n", seed, iterations, argv[3]);
 
 	printf("seeding...");
-	pcg64s_seed(s, seed);
+	pcg64s_seed(s, php_random_uint128_constant(0ULL, seed));
 	printf("OK\n");
 
 	printf("generating...");
